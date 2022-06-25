@@ -55,7 +55,6 @@ namespace Core
                 i += 1;
             }
 
-
             _spritebatch.End();
         }
 
