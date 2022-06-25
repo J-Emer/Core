@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Core
@@ -36,6 +39,26 @@ namespace Core
         public static float yAxis { get; private set; }
 
 
+        private static Dictionary<Keys, Action> _keyDownActions = new Dictionary<Keys, Action>();
+
+        public static void AddKeyDownAction(Keys _key, Action _action)
+        {
+            if(!_keyDownActions.ContainsKey(_key))
+            {
+                _keyDownActions.Add(_key, _action);
+            }
+        }
+        public static void RemoveKeyDownAction(Keys _key, Action _action)
+        {
+            if(_keyDownActions.ContainsKey(_key))
+            {
+                _keyDownActions.Remove(_key);
+            }
+        }
+
+
+
+
 
 
         public static void Update()
@@ -62,6 +85,18 @@ namespace Core
             }
 
             HandleAxis();
+            HandleActions();
+        }
+
+        private static void HandleActions()
+        {
+            foreach (var item in _keyDownActions)
+            {
+                if(GetKeyDown(item.Key))
+                {
+                    item.Value.Invoke();
+                }
+            }
         }
 
         private static void HandleAxis()
